@@ -8,8 +8,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "team",
-        "Type": "WebApplication1.Models.Team",
+        "Name": "teamDto",
+        "Type": "WebApplication1.Dtos.TeamDto",
         "IsRequired": true
       }
     ],

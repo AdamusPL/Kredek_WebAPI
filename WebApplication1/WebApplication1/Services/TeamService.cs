@@ -1,4 +1,5 @@
-﻿using WebApplication1.Models;
+﻿using WebApplication1.Dtos;
+using WebApplication1.Models;
 using WebApplication1.Repositories;
 
 namespace WebApplication1.Services
@@ -12,9 +13,9 @@ namespace WebApplication1.Services
             _teamRepository = teamRepository;
         }
 
-        public void AddTeam(Team team)
+        public void AddTeam(TeamDto teamDto)
         {
-            _teamRepository.AddTeam(team);
+            _teamRepository.AddTeam(teamDto);
         }
 
         public bool DeleteTeam(int id)

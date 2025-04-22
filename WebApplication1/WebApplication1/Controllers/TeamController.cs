@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApplication1.Dtos;
 using WebApplication1.Models;
 using WebApplication1.Services;
 
@@ -22,9 +23,9 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost("AddTeam")]
-        public void AddTeam([FromBody] Team team)
+        public void AddTeam([FromBody] TeamDto teamDto)
         {
-            _teamService.AddTeam(team);
+            _teamService.AddTeam(teamDto);
             Ok();
         }
 

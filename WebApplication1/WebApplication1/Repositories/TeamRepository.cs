@@ -1,34 +1,35 @@
-﻿using WebApplication1.Models;
+﻿using WebApplication1.Dtos;
+using WebApplication1.Models;
 
 namespace WebApplication1.Repositories
 {
     public class TeamRepository : ITeamRepository
     {
-        private static readonly ICollection<Team> TeamList = new List<Team>
+        private readonly AppDbContext _context;
+        public TeamRepository(AppDbContext context)
         {
-            new Team(1, "McLaren", "Woking, United Kingdom", "Zak Brown"),
-            new Team(2, "Red Bull", "Milton Keynes, United Kingdom", "Christian Horner"),
-            new Team(3, "Ferrari", "Maranello, Italy", "Frédéric Vasseur"),
-            new Team(4, "Mercedes", "Brackley, United Kingdom", "Toto Wolff"),
-            new Team(5, "Aston Martin", "Silverstone, United Kingdom", "Mike Krack")
-        };
+            _context = context;
+        }
 
-        public void AddTeam(Team team)
+        public void AddTeam(TeamDto teamDto)
         {
-            TeamList.Add(team);
+            Team team = new Team(teamDto.Name, teamDto.Base, teamDto.Chief);
+            _context.Teams.Add(team);
+            _context.SaveChanges();
         }
 
         public IEnumerable<Team> GetTeams()
         {
-            return TeamList.ToArray();
+            return _context.Teams.ToList();
         }
 
         public bool ModifyTeam(string teamName, string teamPrincipal)
         {
-            Team team = TeamList.FirstOrDefault(t => t.Name.Equals(teamName, StringComparison.OrdinalIgnoreCase));
+            Team team = _context.Teams.FirstOrDefault(t => t.Name.Equals(teamName));
             if (team != null)
             {
                 team.Chief = teamPrincipal;
+                _context.SaveChanges();
                 return true;
             }
             else
@@ -39,11 +40,12 @@ namespace WebApplication1.Repositories
 
         public bool DeleteTeam(int id)
         {
-            Team team = TeamList.FirstOrDefault(t => t.Id.Equals(id));
+            Team team = _context.Teams.FirstOrDefault(t => t.Id.Equals(id));
 
             if (team != null)
             {
-                TeamList.Remove(team);
+                _context.Teams.Remove(team);
+                _context.SaveChanges();
                 return true;
             }
             else

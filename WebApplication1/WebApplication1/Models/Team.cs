@@ -7,9 +7,8 @@
 
         }
 
-        public Team(int id, string name, string baseX, string chief)
+        public Team(string name, string baseX, string chief)
         {
-            this.Id = id;
             this.Name = name;
             this.Base = baseX;
             this.Chief = chief;
