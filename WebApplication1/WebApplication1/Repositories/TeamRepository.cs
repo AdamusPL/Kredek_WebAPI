@@ -1,4 +1,5 @@
-﻿using WebApplication1.Models;
+﻿using WebApplication1.Dtos;
+using WebApplication1.Models;
 
 namespace WebApplication1.Repositories
 {
@@ -13,9 +14,14 @@ namespace WebApplication1.Repositories
             new Team(5, "Aston Martin", "Silverstone, United Kingdom", "Mike Krack")
         };
 
-        public void AddTeam(Team team)
+        public void AddTeam(TeamRequest team)
         {
-            TeamList.Add(team);
+            TeamList.Add(new Team()
+            {
+                Base = team.Base,
+                Name = team.Name,
+                Chief = team.Chief,
+            });
         }
 
         public IEnumerable<Team> GetTeams()
@@ -23,7 +29,7 @@ namespace WebApplication1.Repositories
             return TeamList.ToArray();
         }
 
-        public bool ModifyTeam(string teamName, string teamPrincipal)
+        public bool ModifyTeam(int id, string teamName, string teamPrincipal)
         {
             Team team = TeamList.FirstOrDefault(t => t.Name.Equals(teamName, StringComparison.OrdinalIgnoreCase));
             if (team != null)

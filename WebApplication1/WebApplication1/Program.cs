@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using WebApplication1;
 using WebApplication1.Repositories;
 using WebApplication1.Services;
 
@@ -18,13 +20,19 @@ builder.Services.AddCors(options =>
         });
 });
 
+var connString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connString));
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<ITeamRepository, TeamRepository>();
+// builder.Services.AddSingleton<ITeamRepository, TeamRepository>();
+builder.Services.AddTransient<ITeamRepository, DbTeamRepository>();
 builder.Services.AddTransient<ITeamService, TeamService>();
+
+builder.Services.AddTransient<DbSeeder>();
 
 var app = builder.Build();
 
@@ -42,5 +50,11 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseCors(MyAllowSpecificOrigins);
+
+using (var scope = app.Services.CreateScope())
+{
+    var seeder = scope.ServiceProvider.GetRequiredService<DbSeeder>();
+    seeder.Seed();
+}
 
 app.Run();

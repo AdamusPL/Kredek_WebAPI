@@ -1,4 +1,4 @@
-﻿using WebApplication1.Models;
+﻿using WebApplication1.Dtos;
 using WebApplication1.Repositories;
 
 namespace WebApplication1.Services
@@ -12,7 +12,7 @@ namespace WebApplication1.Services
             _teamRepository = teamRepository;
         }
 
-        public void AddTeam(Team team)
+        public void AddTeam(TeamRequest team)
         {
             _teamRepository.AddTeam(team);
         }
@@ -22,14 +22,15 @@ namespace WebApplication1.Services
             return _teamRepository.DeleteTeam(id);
         }
 
-        public IEnumerable<Team> GetTeams()
+        public IEnumerable<TeamResponse> GetTeams()
         {
-            return _teamRepository.GetTeams();
+            return _teamRepository.GetTeams()
+                .Select(t => new TeamResponse(t));
         }
 
-        public bool ModifyTeam(string teamName, string teamPrincipal)
+        public bool ModifyTeam(int id, string teamName, string teamPrincipal)
         {
-            return _teamRepository.ModifyTeam(teamName, teamPrincipal);
+            return _teamRepository.ModifyTeam(id, teamName, teamPrincipal);
         }
     }
 }

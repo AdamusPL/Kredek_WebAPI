@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebApplication1.Models;
+using WebApplication1.Dtos;
 using WebApplication1.Services;
 
 namespace WebApplication1.Controllers
 {
     [ApiController]
-    [Route ("api/f1/v1")]
+    [Route("api/f1/v1")]
     public class TeamController : ControllerBase
     {
         private readonly ITeamService _teamService;
@@ -16,22 +16,22 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet("GetTeams")]
-        public IEnumerable<Team> GetTeam()
+        public IEnumerable<TeamResponse> GetTeam()
         {
             return _teamService.GetTeams();
         }
 
         [HttpPost("AddTeam")]
-        public void AddTeam([FromBody] Team team)
+        public void AddTeam([FromBody] TeamRequest team)
         {
             _teamService.AddTeam(team);
             Ok();
         }
 
-        [HttpPut("ChangeTeamPrincipal")]
-        public IActionResult ChangeTeamPrincipal([FromQuery] string teamName, [FromQuery] string teamPrincipal)
+        [HttpPut("ChangeTeamPrincipal/{id}")]
+        public IActionResult ChangeTeamPrincipal([FromRoute] int id, [FromQuery] string teamName, [FromQuery] string teamPrincipal)
         {
-            bool managed = _teamService.ModifyTeam(teamName, teamPrincipal);
+            bool managed = _teamService.ModifyTeam(id, teamName, teamPrincipal);
             if (managed)
             {
                 return Ok();
